@@ -3,8 +3,10 @@ module github.com/jinglanghe/go-start
 go 1.21
 
 require (
+	github.com/google/wire v0.5.0
 	github.com/rs/zerolog v1.31.0
 	github.com/spf13/viper v1.18.2
+
 )
 
 require (

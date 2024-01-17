@@ -3,6 +3,7 @@ package config
 import (
 	"github.com/jinglanghe/go-start/utils/log"
 	"github.com/spf13/viper"
+	"time"
 )
 
 var (
@@ -15,8 +16,6 @@ type AppConfig struct {
 	RPCServer  RPCServer
 	HTTPServer HTTPServer
 	HttpClient HttpClient
-	Datasource string
-	JWTConfig  JWTConfig
 	Database   DbStruct
 	Redis      RedisConfig
 }
@@ -28,28 +27,28 @@ type ApiPrefix struct {
 // RPCClient is RPC client config.
 type RPCClient struct {
 	Host    map[string]string
-	Dial    int
-	Timeout int
+	Dial    time.Duration
+	Timeout time.Duration
 }
 
 // RPCServer is RPC server config.
 type RPCServer struct {
 	Network           string
 	Addr              string
-	Timeout           int
-	IdleTimeout       int
-	MaxLifeTime       int
-	ForceCloseWait    int
-	KeepAliveInterval int
-	KeepAliveTimeout  int
+	Timeout           time.Duration
+	IdleTimeout       time.Duration
+	MaxLifeTime       time.Duration
+	ForceCloseWait    time.Duration
+	KeepAliveInterval time.Duration
+	KeepAliveTimeout  time.Duration
 }
 
 // HTTPServer is http server config.
 type HTTPServer struct {
 	Network      string
 	Addr         string
-	ReadTimeout  int
-	WriteTimeout int
+	ReadTimeout  time.Duration
+	WriteTimeout time.Duration
 }
 
 // HttpClient is http client config.
@@ -58,12 +57,6 @@ type HttpClient struct {
 	MaxConnPerHost     int
 	MaxIdleConnPerHost int
 	TimeoutSeconds     int
-}
-
-type JWTConfig struct {
-	SignAlgorithm string
-	SecretKey     string
-	PublicKeyFile string
 }
 
 type DbStruct struct {
@@ -76,15 +69,17 @@ type DbStruct struct {
 	SslMode     string
 	MaxOpenConn int
 	MaxIdleConn int
+	Debug       bool
 }
 
 type RedisConfig struct {
-	Host     string
-	Auth     string
-	Database int
+	Addr     string
+	Password string
+	Expire   time.Duration
+	Db       int
 }
 
-func Init() {
+func Init() *AppConfig {
 	NewViper := viper.NewWithOptions(viper.KeyDelimiter("::"))
 	NewViper.SetConfigName("config")
 	NewViper.AddConfigPath(".")
@@ -99,6 +94,8 @@ func Init() {
 	err := NewViper.Unmarshal(&Config)
 	if err != nil {
 		log.Fatal().Err(err).Msg("config: viper decode config failed")
-		return
+		return nil
 	}
+
+	return &Config
 }

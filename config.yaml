@@ -1,0 +1,49 @@
+apiPrefix:
+  group: /api/v1
+
+rpcClient:
+  host:
+    "serverName01": "localhost:3110"
+    "serverName02": "localhost:3110"
+  dial: "1s"
+  timeout: "1s"
+
+rpcServer:
+  network: "tcp"
+  addr: "3119"
+  timeout: "1s"
+  idleTimeout: "60s"
+  maxLifeTime: "2s"
+  forceCloseWait: "20s"
+  keepAliveInterval: "60s"
+  keepAliveTimeout: "20s"
+
+httpServer:
+  network: "tcp"
+  addr: "3110"
+  readTimeout: "1s"
+  writeTimeout: "1s"
+
+httpClient:
+  maxIdleConn: 100
+  maxConnPerHost: 100
+  maxIdleConnPerHost: 100
+  timeoutSeconds: 60
+
+database:
+  serverType: postgres
+  username: "postgres"
+  password: "Sn5IeDK4nANKG4FR"
+  host: "192.168.3.137"
+  port: 30003
+  dbname: "test"
+  sslMode: "require"
+  maxOpenConn: 10
+  maxIdleConn: 2
+  debug: true
+
+redis:
+  addr: "192.168.3.137:30005"
+  password: "B8G2RZHRWxNH94Ca"
+  expire: "30m"
+  db: 0
