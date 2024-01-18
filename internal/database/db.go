@@ -23,12 +23,8 @@ func GetDb(ctx context.Context) *gorm.DB {
 	return db.WithContext(ctx)
 }
 
-func InitDb(config *config.AppConfig) (*gorm.DB, func(), error) {
-	var err error
-	db, err = NewGormDB(config)
-	if err != nil {
-		return nil, nil, err
-	}
+func InitDb(config *config.AppConfig) (*gorm.DB, func()) {
+	db = NewGormDB(config)
 
 	clearFunc := func() {
 		if db != nil {
@@ -42,16 +38,19 @@ func InitDb(config *config.AppConfig) (*gorm.DB, func(), error) {
 		}
 	}
 
-	if err = dao.AutoMigrate(db); err != nil {
-		return nil, clearFunc, err
+	if err := dao.AutoMigrate(db); err != nil {
+		log.Fatal().Err(err).Send()
+		return nil, clearFunc
 	}
+
 	go PingDb(db, config)
 
-	return db, clearFunc, nil
+	log.Info().Msgf("Successfully connected to db, type: %v", config.Database.ServerType)
+	return db, clearFunc
 
 }
 
-func NewGormDB(c *config.AppConfig) (*gorm.DB, error) {
+func NewGormDB(c *config.AppConfig) *gorm.DB {
 	var dsn string
 	var dialector gorm.Dialector
 	switch c.Database.ServerType {
@@ -76,7 +75,8 @@ func NewGormDB(c *config.AppConfig) (*gorm.DB, error) {
 
 	gdb, err := gorm.Open(dialector, dbConfig)
 	if err != nil {
-		return nil, err
+		log.Fatal().Err(err).Send()
+		return nil
 	}
 
 	if c.Database.Debug {
@@ -85,13 +85,14 @@ func NewGormDB(c *config.AppConfig) (*gorm.DB, error) {
 
 	sqlDB, err := gdb.DB()
 	if err != nil {
-		return nil, err
+		log.Fatal().Err(err).Send()
+		return nil
 	}
 
 	sqlDB.SetMaxIdleConns(c.Database.MaxIdleConn)
 	sqlDB.SetMaxOpenConns(c.Database.MaxOpenConn)
 	sqlDB.SetConnMaxLifetime(time.Duration(c.Database.ConnMaxLifetime) * time.Second)
-	return gdb, nil
+	return gdb
 }
 
 func CreateDatabase(c *config.AppConfig) {

@@ -7,6 +7,7 @@
 package app
 
 import (
+	"github.com/jinglanghe/go-start/internal/cache"
 	"github.com/jinglanghe/go-start/internal/config"
 	"github.com/jinglanghe/go-start/internal/database"
 )
@@ -15,15 +16,15 @@ import (
 
 func Build() (*Application, func(), error) {
 	appConfig := config.Init()
-	db, cleanup, err := database.InitDb(appConfig)
-	if err != nil {
-		return nil, nil, err
-	}
+	db, cleanup := database.InitDb(appConfig)
+	adapter, cleanup2 := cache.Init()
 	application := &Application{
 		Config: appConfig,
 		Db:     db,
+		Cache:  adapter,
 	}
 	return application, func() {
+		cleanup2()
 		cleanup()
 	}, nil
 }
