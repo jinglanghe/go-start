@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"github.com/jinglanghe/go-start/utils/log"
 	"github.com/spf13/viper"
 	"time"
@@ -60,16 +61,23 @@ type HttpClient struct {
 }
 
 type DbStruct struct {
-	ServerType  string
-	Username    string
-	Password    string
-	Host        string
-	Port        int
-	DbName      string
-	SslMode     string
-	MaxOpenConn int
-	MaxIdleConn int
-	Debug       bool
+	ServerType      string
+	Username        string
+	Password        string
+	Host            string
+	Port            int
+	DbName          string
+	SslMode         string
+	MaxOpenConn     int
+	MaxIdleConn     int
+	ConnMaxLifetime int
+	DbPing          int
+	Debug           bool
+}
+
+func (d *DbStruct) DSN() string {
+	return fmt.Sprintf("host=%s port=%d user=%s dbname=%s password=%s sslmode=%s",
+		d.Host, d.Port, d.Username, d.DbName, d.Password, d.SslMode)
 }
 
 type RedisConfig struct {

@@ -33,13 +33,15 @@ httpClient:
 database:
   serverType: postgres
   username: "postgres"
-  password: "Sn5IeDK4nANKG4FR"
-  host: "192.168.3.137"
-  port: 30003
-  dbname: "test"
-  sslMode: "require"
-  maxOpenConn: 10
-  maxIdleConn: 2
+  password: "123456"
+  host: "127.0.0.1"
+  port: 5432
+  dbName: "go_start"
+  sslMode: "disable"
+  maxOpenConn: 100
+  maxIdleConn: 10
+  connMaxLifetime: 1000
+  dbPing: 10
   debug: true
 
 redis:

@@ -8,15 +8,22 @@ package app
 
 import (
 	"github.com/jinglanghe/go-start/internal/config"
+	"github.com/jinglanghe/go-start/internal/database"
 )
 
 // Injectors from wire.go:
 
 func Build() (*Application, func(), error) {
 	appConfig := config.Init()
+	db, cleanup, err := database.InitDb(appConfig)
+	if err != nil {
+		return nil, nil, err
+	}
 	application := &Application{
 		Config: appConfig,
+		Db:     db,
 	}
 	return application, func() {
+		cleanup()
 	}, nil
 }
