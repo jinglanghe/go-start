@@ -35,6 +35,7 @@ func Init() (Adapter, func()) {
 			log.Info().Msg("closed cache connection")
 		}
 	}
+	InitRedisLock()
 	return adapter, clearFunc
 }
 

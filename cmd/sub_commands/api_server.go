@@ -15,7 +15,7 @@ const (
 	appId   = "go-start"
 )
 
-// ApiServer Api_server represents the alert command
+// ApiServer api_server represents the server command
 var ApiServer = &cobra.Command{
 	Use:   "api_server",
 	Short: "api_server",
@@ -26,7 +26,8 @@ var ApiServer = &cobra.Command{
 			log.Fatal().Err(err).Msg("app build failed")
 		}
 
-		log.Info().Interface("newApp", newApp).Interface("cleanFunc", cleanFunc).Msg("init app successfully")
+		log.Info().Interface("newApp", newApp).Interface("cleanFunc", cleanFunc).
+			Msg("init app successfully")
 
 		c := make(chan os.Signal, 1)
 		signal.Notify(c, syscall.SIGHUP, syscall.SIGQUIT, syscall.SIGTERM, syscall.SIGINT)

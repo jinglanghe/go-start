@@ -102,7 +102,6 @@ func Init() *AppConfig {
 	err := NewViper.Unmarshal(&Config)
 	if err != nil {
 		log.Fatal().Err(err).Msg("config: viper decode config failed")
-		return nil
 	}
 
 	return &Config
