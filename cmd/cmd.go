@@ -22,4 +22,5 @@ func Execute() {
 
 func init() {
 	rootCmd.AddCommand(sub_commands.ApiServer)
+	rootCmd.AddCommand(sub_commands.VersionCmd)
 }
