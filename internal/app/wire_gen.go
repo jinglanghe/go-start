@@ -10,6 +10,7 @@ import (
 	"github.com/jinglanghe/go-start/internal/cache"
 	"github.com/jinglanghe/go-start/internal/config"
 	"github.com/jinglanghe/go-start/internal/database"
+	"github.com/jinglanghe/go-start/internal/web"
 )
 
 // Injectors from wire.go:
@@ -18,10 +19,12 @@ func Build() (*Application, func(), error) {
 	appConfig := config.Init()
 	db, cleanup := database.InitDb(appConfig)
 	adapter, cleanup2 := cache.Init()
+	engine := web.InitGinEngine()
 	application := &Application{
-		Config: appConfig,
-		Db:     db,
-		Cache:  adapter,
+		Config:    appConfig,
+		Db:        db,
+		Cache:     adapter,
+		GinEngine: engine,
 	}
 	return application, func() {
 		cleanup2()
